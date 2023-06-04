@@ -1,6 +1,6 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_firebase_tp/models/post.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_firebase_tp/blocs/posts_bloc/posts_bloc.dart';
 
 class PostAdd extends StatefulWidget {
   const PostAdd({Key? key}) : super(key: key);
@@ -16,18 +16,6 @@ class PostAdd extends StatefulWidget {
 }
 
 class _PostAddState extends State<PostAdd> {
-
-  Future<void> _addPosts(title, description) async {
-    final CollectionReference postsCollection = FirebaseFirestore.instance.collection('posts');
-
-    try {
-      await postsCollection.add({"title": title, "description": description});
-      print("User added");
-    } catch (error) {
-      print("Failed to add user: $error");
-    }
-  }
-
   final _formKey = GlobalKey<FormState>();
   final titleController = TextEditingController();
   final descriptionController = TextEditingController();
@@ -60,20 +48,49 @@ class _PostAddState extends State<PostAdd> {
               },
               controller: descriptionController,
             ),
-            ElevatedButton(
-              onPressed: () {
-                if (_formKey.currentState!.validate()) {
-                  _addPosts(titleController.text, descriptionController.text);
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Processing Data')),
-                  );
+            BlocConsumer<PostsBloc, PostsState>(
+              listener: (context, state) {
+                if (state.status == PostsStatus.success) {
+                  Navigator.of(context).pop();
+                } else if (state.status == PostsStatus.error) {
+                  _showSnackBar(context, state.error ?? '');
                 }
               },
-              child: const Text('Créer'),
+              builder: (context, state) {
+                return Builder(builder: (context) {
+                  return ElevatedButton(
+                    onPressed: () {
+                      if (_formKey.currentState!.validate()) {
+                        _onAddPost(
+                          context,
+                          titleController.text,
+                          descriptionController.text,
+                        );
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('Post Crée')),
+                        );
+                      }
+                    },
+                    child: const Text('Créer'),
+                  );
+                });
+              },
             ),
           ],
         ),
       ),
     );
+  }
+
+  void _showSnackBar(BuildContext context, String text) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(text),
+      ),
+    );
+  }
+
+  void _onAddPost(BuildContext context, title, description) {
+    BlocProvider.of<PostsBloc>(context).add(AddPost(title, description));
   }
 }

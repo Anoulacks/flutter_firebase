@@ -4,7 +4,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_firebase_tp/blocs/posts_bloc/posts_bloc.dart';
+import 'package:flutter_firebase_tp/data_sources/posts_data_source.dart';
+import 'package:flutter_firebase_tp/repository/posts_repository.dart';
 import 'package:flutter_firebase_tp/screens/post/post_add.dart';
+import 'package:flutter_firebase_tp/screens/post/post_detail.dart';
 import 'package:flutter_firebase_tp/screens/post/post_list.dart';
 import 'firebase_options.dart';
 import 'models/post.dart';
@@ -35,24 +40,41 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      routes: {
-        '/': (context) => const PostList(title: 'title'),
-        PostAdd.routeName: (context) => const PostAdd(),
-      },
-      onGenerateRoute: (settings) {
-        Widget content = const SizedBox.shrink();
-
-        return MaterialPageRoute(
-          builder: (context) {
-            return content;
+    return RepositoryProvider(
+      create: (context) => PostsRepository(remoteDataSource: PostsDataSource()),
+      child: BlocProvider(
+        create: (context) => PostsBloc(
+          repository: RepositoryProvider.of<PostsRepository>(context),
+        )..add(GetAllPosts()),
+        child: MaterialApp(
+          title: 'Flutter Demo',
+          theme: ThemeData(
+            primarySwatch: Colors.blue,
+          ),
+          routes: {
+            '/': (context) => const PostList(title: 'title'),
+            PostAdd.routeName: (context) => const PostAdd(),
           },
-        );
-      },
+          onGenerateRoute: (settings) {
+            Widget content = const SizedBox.shrink();
+
+            switch (settings.name) {
+              case PostDetail.routeName:
+                final arguments = settings.arguments;
+                if (arguments is Post) {
+                  content = PostDetail(post: arguments);
+                }
+                break;
+            }
+
+            return MaterialPageRoute(
+              builder: (context) {
+                return content;
+              },
+            );
+          },
+        ),
+      ),
     );
   }
 }
