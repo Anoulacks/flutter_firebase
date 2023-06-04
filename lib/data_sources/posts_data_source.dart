@@ -12,7 +12,7 @@ class PostsDataSource {
   Stream<QuerySnapshot> getPosts2() {
     final CollectionReference postsCollection = FirebaseFirestore.instance.collection('posts');
 
-    final Stream<QuerySnapshot> postStream = postsCollection.snapshots();
+    final Stream<QuerySnapshot> postStream = postsCollection.snapshots(includeMetadataChanges: true);
     return postStream;
   }
 

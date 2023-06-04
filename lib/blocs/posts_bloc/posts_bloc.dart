@@ -12,7 +12,7 @@ class PostsBloc extends Bloc<PostsEvent, PostsState> {
   PostsBloc({required this.repository}) : super(PostsState()) {
     on<GetAllPosts>((event, emit) async {
       emit(state.copyWith(status: PostsStatus.loading));
-
+      await Future.delayed(const Duration(seconds: 1));
       try {
         final postsData = await repository.getPosts();
 
@@ -26,6 +26,7 @@ class PostsBloc extends Bloc<PostsEvent, PostsState> {
 
     on<AddPost>((event, emit) async {
       emit(state.copyWith(status: PostsStatus.loading));
+      await Future.delayed(const Duration(seconds: 3));
 
       try {
         await repository.addPosts(event.title, event.description);
@@ -39,6 +40,7 @@ class PostsBloc extends Bloc<PostsEvent, PostsState> {
 
     on<UpdatePost>((event, emit) async {
       emit(state.copyWith(status: PostsStatus.loading));
+      await Future.delayed(const Duration(seconds: 3));
 
       try {
         await repository.updatePosts(event.post);

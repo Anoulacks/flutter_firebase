@@ -62,10 +62,21 @@ class _PostAddState extends State<PostAdd> {
               ),
               BlocConsumer<PostsBloc, PostsState>(
                 listener: (context, state) {
-                  if (state.status == PostsStatus.success) {
-                    Navigator.of(context).pop();
-                  } else if (state.status == PostsStatus.error) {
-                    _showSnackBar(context, state.error ?? '');
+                  switch (state.status) {
+                    case PostsStatus.initial:
+                      break;
+                    case PostsStatus.loading:
+                      _showSnackBar(context, 'Chargement');
+                      break;
+                    case PostsStatus.error:
+                      _showSnackBar(context, state.error ?? '');
+                      break;
+                    case PostsStatus.success:
+                      Navigator.of(context).pop();
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Post Crée')),
+                      );
+                      break;
                   }
                 },
                 builder: (context, state) {
@@ -78,9 +89,6 @@ class _PostAddState extends State<PostAdd> {
                               context,
                               titleController.text,
                               descriptionController.text,
-                            );
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(content: Text('Post Crée')),
                             );
                           }
                         },

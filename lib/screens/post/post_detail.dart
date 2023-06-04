@@ -23,7 +23,6 @@ class PostDetail extends StatefulWidget {
 }
 
 class _PostDetailState extends State<PostDetail> {
-
   @override
   void initState() {
     super.initState();
@@ -35,7 +34,8 @@ class _PostDetailState extends State<PostDetail> {
   Widget build(BuildContext context) {
     final formKey = GlobalKey<FormState>();
     final titleController = TextEditingController(text: widget.post.title);
-    final descriptionController = TextEditingController(text: widget.post.description);
+    final descriptionController =
+        TextEditingController(text: widget.post.description);
 
     return Scaffold(
       appBar: AppBar(
@@ -73,52 +73,61 @@ class _PostDetailState extends State<PostDetail> {
                   labelText: "Description",
                 ),
               ),
-              checkUpdate ? TextButton(
-                onPressed: () =>
-                {
-                  if (formKey.currentState!.validate())
-                    {
-                      //UserServices.updateUser(widget.user.id,typeUser, jobController.text, numberController.text, addressController.text)
-                    }
-                },
-                child: BlocConsumer<PostsBloc, PostsState>(
-                  listener: (context, state) {
-                    if (state.status == PostsStatus.success) {
-                      PostList.navigateTo(context);
-                    } else if (state.status == PostsStatus.error) {
-                      _showSnackBar(context, state.error ?? '');
-                    }
-                  },
-                  builder: (context, state) {
-                    return Builder(
-                        builder: (context) {
-                          return Center(
-                            child: ElevatedButton(
-                              onPressed: () {
-                                if (formKey.currentState!.validate()) {
-                                  final Post updatePost = Post(id: widget.post.id,
-                                      title: titleController.text,
-                                      description: descriptionController.text);
-                                  _onUpdatePost(context, updatePost);
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(content: Text('Post Modifié')),
-                                  );
-                                }
-                              },
-                              child: const Text('Modifier le post'),
-                            ),
-                          );
-                        }
-                    );
-                  },
-                ),
-              ) : const Text("")
+              checkUpdate
+                  ? TextButton(
+                      onPressed: () => {
+                        if (formKey.currentState!.validate())
+                          {
+                            //UserServices.updateUser(widget.user.id,typeUser, jobController.text, numberController.text, addressController.text)
+                          }
+                      },
+                      child: BlocConsumer<PostsBloc, PostsState>(
+                        listener: (context, state) {
+                          switch (state.status) {
+                            case PostsStatus.initial:
+                              break;
+                            case PostsStatus.loading:
+                              _showSnackBar(context, 'Chargement');
+                              break;
+                            case PostsStatus.error:
+                              _showSnackBar(context, state.error ?? '');
+                              break;
+                            case PostsStatus.success:
+                              PostList.navigateTo(context);
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(content: Text('Post Modifié')),
+                              );
+                              break;
+                          }
+                        },
+                        builder: (context, state) {
+                          return Builder(builder: (context) {
+                            return Center(
+                              child: ElevatedButton(
+                                onPressed: () {
+                                  if (formKey.currentState!.validate()) {
+                                    final Post updatePost = Post(
+                                        id: widget.post.id,
+                                        title: titleController.text,
+                                        description:
+                                            descriptionController.text);
+                                    _onUpdatePost(context, updatePost);
+                                  }
+                                },
+                                child: const Text('Modifier le post'),
+                              ),
+                            );
+                          });
+                        },
+                      ),
+                    )
+                  : const Text("")
             ],
           ),
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => { _enableUpdate() },
+        onPressed: () => {_enableUpdate()},
         child: const Icon(Icons.edit),
       ),
     );
@@ -141,5 +150,4 @@ class _PostDetailState extends State<PostDetail> {
   void _onUpdatePost(BuildContext context, Post post) {
     BlocProvider.of<PostsBloc>(context).add(UpdatePost(post));
   }
-
 }
