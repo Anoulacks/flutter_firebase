@@ -11,8 +11,8 @@ class PostsRepository {
 
   Future<List<Post>> getPosts() async {
     try {
-      final products = await remoteDataSource.getPosts();
-      return products;
+      final posts = await remoteDataSource.getPosts();
+      return posts;
     } catch (e) {
       rethrow;
     }
