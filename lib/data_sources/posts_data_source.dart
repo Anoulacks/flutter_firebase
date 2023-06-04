@@ -9,7 +9,7 @@ class PostsDataSource {
     return postsData;
   }
 
-  Stream<QuerySnapshot> getPosts2() {
+  Stream<QuerySnapshot> getPostsRealTime() {
     final CollectionReference postsCollection = FirebaseFirestore.instance.collection('posts');
 
     final Stream<QuerySnapshot> postStream = postsCollection.snapshots(includeMetadataChanges: true);

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_firebase_tp/blocs/posts_bloc/posts_bloc.dart';
 import 'package:flutter_firebase_tp/models/post.dart';
-import 'package:flutter_firebase_tp/screens/post/post_list.dart';
 
 class PostDetail extends StatefulWidget {
   static const String routeName = '/PostDetail';
@@ -93,7 +92,7 @@ class _PostDetailState extends State<PostDetail> {
                               _showSnackBar(context, state.error ?? '');
                               break;
                             case PostsStatus.success:
-                              PostList.navigateTo(context);
+                              Navigator.of(context).pop();
                               ScaffoldMessenger.of(context).showSnackBar(
                                 const SnackBar(content: Text('Post Modifié')),
                               );
