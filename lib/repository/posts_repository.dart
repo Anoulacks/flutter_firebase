@@ -18,6 +18,15 @@ class PostsRepository {
     }
   }
 
+  Stream<QuerySnapshot> getPostsRealTime() {
+    try {
+      final postStream = remoteDataSource.getPostsRealTime();
+      return postStream;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
   Future<void> addPosts(title, description) async {
     try {
       await remoteDataSource.addPosts(title, description);

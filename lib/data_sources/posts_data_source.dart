@@ -5,7 +5,7 @@ class PostsDataSource {
   Future<List<Post>> getPosts() async {
     final db = FirebaseFirestore.instance;
     final snapshot = await db.collection('posts').get();
-    final postsData = snapshot.docs.map((e) => Post.fromSnapshot(e)).toList();
+    final postsData = snapshot.docs.map((element) => Post.fromSnapshot(element)).toList();
     return postsData;
   }
 
@@ -22,7 +22,6 @@ class PostsDataSource {
 
     try {
       await postsCollection.add({"title": title, "description": description});
-      print("User added");
     } catch (error) {
       print("Failed to add user: $error");
     }
@@ -33,14 +32,11 @@ class PostsDataSource {
         FirebaseFirestore.instance.collection('posts');
 
     try {
-      print(post.title);
-      print(post.description);
       await postsCollection
           .doc(post.id)
           .update({'title': post.title, 'description': post.description});
-      print("User updated");
     } catch (error) {
-      print("Failed to add user: $error");
+      print("Failed to update user: $error");
     }
   }
 }
