@@ -11,12 +11,12 @@ class Post {
     required this.description,
   });
 
-  factory Post.fromSnapshot(DocumentSnapshot<Map<String, dynamic>> document){
+  factory Post.fromSnapshot(DocumentSnapshot<Map<String, dynamic>> document) {
     final data = document.data()!;
     return Post(
-        id: document.id,
-        title: data["title"],
-        description: data["description"]
+      id: document.id,
+      title: data["title"],
+      description: data["description"],
     );
   }
 }

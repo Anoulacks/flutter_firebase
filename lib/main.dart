@@ -1,9 +1,9 @@
 import 'dart:async';
 import 'dart:isolate';
-import 'package:cloud_firestore/cloud_firestore.dart';
+
+import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_firebase_tp/blocs/posts_bloc/posts_bloc.dart';
 import 'package:flutter_firebase_tp/data_sources/posts_data_source.dart';
@@ -11,9 +11,8 @@ import 'package:flutter_firebase_tp/repository/posts_repository.dart';
 import 'package:flutter_firebase_tp/screens/post/post_add.dart';
 import 'package:flutter_firebase_tp/screens/post/post_detail.dart';
 import 'package:flutter_firebase_tp/screens/post/post_list.dart';
-import 'firebase_options.dart';
-import 'models/post.dart';
 
+import 'models/post.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -47,7 +46,7 @@ class MyApp extends StatelessWidget {
           repository: RepositoryProvider.of<PostsRepository>(context),
         )..add(GetAllPosts()),
         child: MaterialApp(
-          title: 'Flutter Demo',
+          title: 'TP Flutter Firebase',
           theme: ThemeData(
             primarySwatch: Colors.blue,
           ),

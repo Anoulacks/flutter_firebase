@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_firebase_tp/blocs/posts_bloc/posts_bloc.dart';
 import 'package:flutter_firebase_tp/models/post.dart';
 
 class PostItem extends StatelessWidget {

@@ -6,6 +6,7 @@ enum PostsStatus {
   success,
   error,
 }
+
 @immutable
 class PostsState {
   final PostsStatus status;
