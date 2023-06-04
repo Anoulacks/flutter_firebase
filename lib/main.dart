@@ -52,7 +52,8 @@ class MyApp extends StatelessWidget {
             primarySwatch: Colors.blue,
           ),
           routes: {
-            '/': (context) => const PostList(title: 'title'),
+            '/': (context) => const PostList(),
+            PostList.routeName: (context) => const PostList(),
             PostAdd.routeName: (context) => const PostAdd(),
           },
           onGenerateRoute: (settings) {

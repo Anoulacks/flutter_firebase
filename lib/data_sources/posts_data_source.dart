@@ -19,4 +19,17 @@ class PostsDataSource {
       print("Failed to add user: $error");
     }
   }
+
+  Future<void> updatePosts(Post post) async {
+    final CollectionReference postsCollection = FirebaseFirestore.instance.collection('posts');
+
+    try {
+      print (post.title);
+      print (post.description);
+      await postsCollection.doc(post.id).update({'title': post.title, 'description': post.description});
+      print("User updated");
+    } catch (error) {
+      print("Failed to add user: $error");
+    }
+  }
 }

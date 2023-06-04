@@ -26,6 +26,14 @@ class PostsRepository {
     }
   }
 
+  Future<void> updatePosts(Post post) async {
+    try {
+      await remoteDataSource.updatePosts(post);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
   Future<Stream<QuerySnapshot<Map<String, dynamic>>>> getInstancePosts(title, description) async {
     return FirebaseFirestore.instance.collection('posts').snapshots();
   }

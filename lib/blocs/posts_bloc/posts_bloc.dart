@@ -39,5 +39,17 @@ class PostsBloc extends Bloc<PostsEvent, PostsState> {
         throw Exception(error);
       }
     });
+
+    on<UpdatePost>((event, emit) async {
+      emit(state.copyWith(status: PostsStatus.loading));
+
+      try {
+        await repository.updatePosts(event.post);
+        emit(state.copyWith(status: PostsStatus.success));
+      } catch (error) {
+        emit(state.copyWith(status: PostsStatus.error, error: error.toString()));
+        throw Exception(error);
+      }
+    });
   }
 }

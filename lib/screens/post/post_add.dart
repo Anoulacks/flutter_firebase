@@ -26,57 +26,72 @@ class _PostAddState extends State<PostAdd> {
       appBar: AppBar(
         title: const Text('Ajout d\'un Post'),
       ),
-      body: Form(
-        key: _formKey,
-        child: Column(
-          children: <Widget>[
-            TextFormField(
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Champs Obligatoire';
-                }
-                return null;
-              },
-              controller: titleController,
-            ),
-            TextFormField(
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Champs Obligatoire';
-                }
-                return null;
-              },
-              controller: descriptionController,
-            ),
-            BlocConsumer<PostsBloc, PostsState>(
-              listener: (context, state) {
-                if (state.status == PostsStatus.success) {
-                  Navigator.of(context).pop();
-                } else if (state.status == PostsStatus.error) {
-                  _showSnackBar(context, state.error ?? '');
-                }
-              },
-              builder: (context, state) {
-                return Builder(builder: (context) {
-                  return ElevatedButton(
-                    onPressed: () {
-                      if (_formKey.currentState!.validate()) {
-                        _onAddPost(
-                          context,
-                          titleController.text,
-                          descriptionController.text,
-                        );
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Post Crée')),
-                        );
-                      }
-                    },
-                    child: const Text('Créer'),
-                  );
-                });
-              },
-            ),
-          ],
+      body: Padding(
+        padding: const EdgeInsets.symmetric(
+          vertical: 10,
+          horizontal: 20,
+        ),
+        child: Form(
+          key: _formKey,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              TextFormField(
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Champs Obligatoire';
+                  }
+                  return null;
+                },
+                controller: titleController,
+                decoration: const InputDecoration(
+                  labelText: "Titre",
+                ),
+              ),
+              TextFormField(
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Champs Obligatoire';
+                  }
+                  return null;
+                },
+                controller: descriptionController,
+                decoration: const InputDecoration(
+                  labelText: "Description",
+                ),
+              ),
+              BlocConsumer<PostsBloc, PostsState>(
+                listener: (context, state) {
+                  if (state.status == PostsStatus.success) {
+                    Navigator.of(context).pop();
+                  } else if (state.status == PostsStatus.error) {
+                    _showSnackBar(context, state.error ?? '');
+                  }
+                },
+                builder: (context, state) {
+                  return Builder(builder: (context) {
+                    return Center(
+                      child: ElevatedButton(
+                        onPressed: () {
+                          if (_formKey.currentState!.validate()) {
+                            _onAddPost(
+                              context,
+                              titleController.text,
+                              descriptionController.text,
+                            );
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(content: Text('Post Crée')),
+                            );
+                          }
+                        },
+                        child: const Text('Créer'),
+                      ),
+                    );
+                  });
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );

@@ -10,9 +10,14 @@ import 'package:flutter_firebase_tp/screens/post/post_detail.dart';
 import 'package:flutter_firebase_tp/screens/post/widgets/post_item.dart';
 
 class PostList extends StatefulWidget {
-  const PostList({super.key, required this.title});
+  static const String routeName = '/PostList';
 
-  final String title;
+  static void navigateTo(BuildContext context) {
+    Navigator.of(context).pushNamed(routeName);
+  }
+
+  const PostList({super.key});
+
 
   @override
   State<PostList> createState() => _PostListState();
@@ -37,15 +42,7 @@ class _PostListState extends State<PostList> {
           builder: (context) {
             return Scaffold(
               appBar: AppBar(
-                title: const Text('liste des posts'),
-                actions: [
-                  IconButton(
-                    icon: const Icon(Icons.add),
-                    onPressed: () {
-                      PostAdd.navigateTo(context);
-                    },
-                  ),
-                ],
+                title: const Text('Liste des posts'),
               ),
               body: BlocBuilder<PostsBloc, PostsState>(
                 builder: (context, state) {
@@ -81,6 +78,10 @@ class _PostListState extends State<PostList> {
                       );
                   }
                 },
+              ),
+              floatingActionButton: FloatingActionButton(
+                onPressed: () => { PostAdd.navigateTo(context) },
+                child: const Icon(Icons.add),
               ),
             );
           }
